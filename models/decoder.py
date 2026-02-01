@@ -1,23 +1,32 @@
-import tensorflow as tf
-from tensorflow.keras import layers, Model
+import torch
+import torch.nn as nn
 
-class RNNDecoder(Model):
+class RNNDecoder(nn.Module):
     def __init__(self, vocab_size, embedding_dim=256, rnn_units=512):
         super().__init__()
-        self.embedding = layers.Embedding(vocab_size, embedding_dim)  # map token ids to embeddings
-        self.lstm = layers.LSTM(rnn_units, return_sequences=True, return_state=True)
-        self.fc = layers.Dense(vocab_size)  # final output: logits for each token
+        self.embedding = nn.Embedding(vocab_size, embedding_dim)  # map token ids to embeddings
+        self.lstm = nn.LSTM(embedding_dim, rnn_units, batch_first=True)  # input size is embedding_dim, output size is rnn_units
+        self.fc = nn.Linear(rnn_units, vocab_size)  # final output: logits for each token, size vocab_size
+        self.enc_to_h = nn.Linear(embedding_dim, rnn_units)  # change encoder features to initial hidden state size
 
-    def call(self, x, hidden_state=None, encoder_output=None):
+    def forward(self, x, encoder_features = None,hidden_state=None):
         x = self.embedding(x)  # turn token IDs into embeddings
         if hidden_state is None:
-            output, state_h, state_c = self.lstm(x)
+            if encoder_features is not None:  # use encoder features to initialize hidden state
+                h0 = torch.tanh(self.enc_to_h(encoder_features)).unsqueeze(0)  # map encoder features to initial hidden state
+                c0 = torch.zeros_like(h0)  # initial cell state
+                output, hidden = self.lstm(x, (h0, c0))
+            else:
+                output, hidden = self.lstm(x)
         else:
-            output, state_h, state_c = self.lstm(x, initial_state=hidden_state)
+            output, hidden = self.lstm(x, hidden)
         logits = self.fc(output)  # (batch, seq_len, vocab_size)
         # state_h is the final hidden state of the current output and state_c is a memory to remember important info from previous tokens
-        return logits, (state_h, state_c)  
-decoder = RNNDecoder(vocab_size=62, embedding_dim=256, rnn_units=512)
-sample_tokens = tf.constant([[1, 5, 3]])  # batch of 1 sequence
-logits, state = decoder(sample_tokens)
-print(logits.shape)  # (1, 3, 62)
+        return logits, hidden
+if __name__ == "__main__":
+    decoder = RNNDecoder(vocab_size=62)
+
+    sample_tokens = torch.tensor([[1, 5, 3]])
+    logits, hidden = decoder(sample_tokens)
+
+    print("Logits shape:", logits.shape)
