@@ -22,14 +22,8 @@ handtex/
 
 The dataset is not included in the repo. It's hosted on HuggingFace as [deepcopy/MathWriting-human](https://huggingface.co/datasets/deepcopy/MathWriting-human) (~1.4 GB download, ~230k training examples of handwritten math images paired with LaTeX strings).
 
-To download and save it locally:
+To download and save it locally, just run get_data.py file. 
 
-```bash
-pip install datasets
-python -c "from datasets import load_dataset; load_dataset('deepcopy/MathWriting-human').save_to_disk('data/mathwriting')"
-```
-
-Or run the data-loading cell in `notebooks/eda.ipynb`.
 
 This will create `data/mathwriting/` with train, test, and val splits in Arrow format. The `data/` directory is git-ignored.
 
