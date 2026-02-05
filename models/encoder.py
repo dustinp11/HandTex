@@ -16,6 +16,7 @@ class CNNEncoder(nn.Module):
         
         self.flatten = nn.Flatten()
         self.fc = nn.Linear(128*16*16, embedding_dim)  # final feature vector to embedding_dim
+        self.ln = nn.LayerNorm(embedding_dim)  # normalize features
 
     def forward(self, x):
         x = torch.relu(self.conv1(x))  # each conv layer extracts complex features
@@ -29,6 +30,7 @@ class CNNEncoder(nn.Module):
         
         x = self.flatten(x)  # converts the final 2D feature maps to 1D vector of size (batch_size, features)
         x = torch.relu(self.fc(x))
+        x = self.ln(x)  # normalize feature vector
         return x  
 # example usage
 if __name__ == "__main__":

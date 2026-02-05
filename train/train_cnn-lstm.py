@@ -15,7 +15,7 @@ embedding_dim = 256
 rnn_units = 512
 VOCAB_SIZE = 64
 BATCH_SIZE = 16
-EPOCHS = 10
+EPOCHS = 50
 learning_rate = 1e-3
 
 DEVICE = torch.device("cuda" if torch.cuda.is_available() else "cpu")
