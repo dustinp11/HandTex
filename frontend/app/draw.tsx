@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import {
   View,
   Text,
@@ -10,10 +10,21 @@ import {
 } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { useLocalSearchParams, useRouter } from "expo-router";
-import DrawingCanvas, { Stroke } from "../src/components/DrawingCanvas";
+import DrawingCanvas from "../src/components/DrawingCanvas";
+import type { Stroke } from "../src/components/DrawingCanvas";
 import { getNote, upsertNote } from "../src/db";
 
+import ViewShot, { captureRef } from "react-native-view-shot";
+import * as FileSystem from "expo-file-system";
+
 export default function DrawScreen() {
+  const captureTargetRef = useRef<React.ElementRef<typeof View> | null>(null);
+
+  const FLASK_URL = "http://172.31.241.116:5000";
+
+  const [latex, setLatex] = useState<string>("");
+  const [predicting, setPredicting] = useState(false);
+
   const router = useRouter();
   const params = useLocalSearchParams();
   const idParam = params?.id;
@@ -37,6 +48,62 @@ export default function DrawScreen() {
     const savedId = await upsertNote({ id: noteId, title, strokes });
     Alert.alert("Saved", `Note #${savedId} saved.`);
     router.setParams({ id: String(savedId) });
+  }
+
+  async function onPredict() {
+    try {
+      if (!captureTargetRef.current) throw new Error("Canvas not ready");
+      setPredicting(true);
+
+      // Capture PNG of the drawing area
+      const uri = await captureRef(captureTargetRef, {
+        format: "png",
+        quality: 1,
+        result: "tmpfile",
+      });
+
+      if (!uri) throw new Error("Capture failed (no uri)");
+
+      const info = await FileSystem.getInfoAsync(uri);
+      if (!info.exists) throw new Error("Captured file does not exist");
+
+      const size = info.size ?? 0;
+      if (size < 1000) {
+        throw new Error(`Captured image looks empty (size=${size} bytes)`);
+      }
+
+      // ✅ Expo-compatible multipart upload (no enum needed)
+      const uploadRes = await FileSystem.uploadAsync(`${FLASK_URL}/predict`, uri, {
+        httpMethod: "POST",
+        uploadType: "multipart" as any,
+        fieldName: "image", // MUST match Flask: request.files["image"]
+        mimeType: "image/png",
+      });
+
+      let data: any = {};
+      try {
+        data = JSON.parse(uploadRes.body || "{}");
+      } catch {
+        throw new Error(`Server returned non-JSON: ${uploadRes.body}`);
+      }
+
+      if (uploadRes.status < 200 || uploadRes.status >= 300) {
+        throw new Error(data?.error ?? `Prediction failed (status ${uploadRes.status})`);
+      }
+
+      if (data?.latex) {
+        setLatex(data.latex);
+        Alert.alert("LaTeX", data.latex || "(empty)");
+      } else if (data?.saved_as) {
+        Alert.alert("Uploaded", `Saved on laptop:\n${data.saved_as}`);
+      } else {
+        Alert.alert("Response", JSON.stringify(data, null, 2));
+      }
+    } catch (e: any) {
+      Alert.alert("Predict failed", e?.message ?? String(e));
+    } finally {
+      setPredicting(false);
+    }
   }
 
   return (
@@ -70,7 +137,7 @@ export default function DrawScreen() {
               }}
             />
 
-            <View style={{ flexDirection: "row", gap: 10 }}>
+            <View style={{ flexDirection: "row", gap: 10, flexWrap: "wrap" }}>
               <Pressable
                 onPress={() => setStrokes([])}
                 style={{
@@ -98,6 +165,23 @@ export default function DrawScreen() {
               </Pressable>
 
               <Pressable
+                onPress={onPredict}
+                disabled={predicting}
+                style={{
+                  paddingVertical: 8,
+                  paddingHorizontal: 12,
+                  borderWidth: 1,
+                  borderRadius: 10,
+                  borderColor: "black",
+                  opacity: predicting ? 0.5 : 1,
+                }}
+              >
+                <Text style={{ color: "black" }}>
+                  {predicting ? "Predicting..." : "Predict"}
+                </Text>
+              </Pressable>
+
+              <Pressable
                 onPress={() => router.back()}
                 style={{
                   paddingVertical: 8,
@@ -110,9 +194,26 @@ export default function DrawScreen() {
                 <Text style={{ color: "black" }}>Back</Text>
               </Pressable>
             </View>
+
+            {latex ? (
+              <Text style={{ color: "black" }} numberOfLines={3}>
+                LaTeX: {latex}
+              </Text>
+            ) : null}
           </View>
 
-          <DrawingCanvas strokes={strokes} onChangeStrokes={setStrokes} />
+          <ViewShot
+            options={{ format: "png", quality: 1, result: "tmpfile" }}
+            style={{ flex: 1, backgroundColor: "white" }}
+          >
+            <View
+              ref={captureTargetRef}
+              collapsable={false}
+              style={{ flex: 1, backgroundColor: "white" }}
+            >
+              <DrawingCanvas strokes={strokes} onChangeStrokes={setStrokes} />
+            </View>
+          </ViewShot>
         </View>
       </TouchableWithoutFeedback>
     </SafeAreaView>
