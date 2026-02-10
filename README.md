@@ -1,8 +1,9 @@
 # HandTeX
 
-> **WIP** -- everything here is subject to change.
+> **WIP**
 
-Handwriting-to-LaTeX: draw a math equation on a canvas and get the LaTeX back. Built with a Vision Transformer (ViT) trained on the [MathWriting](https://huggingface.co/datasets/deepcopy/MathWriting-human) dataset.
+Handwriting-to-LaTeX: draw a math equation on a canvas and get the LaTeX back. Built with a pretrained Vision Transformer (ViT) encoder + custom LSTM decoder trained on the [MathWriting](https://huggingface.co/datasets/deepcopy/MathWriting-human). Training is done through Kaggle notebooks. 
+
 
 Course project for UCI CS 175 (Winter 2026).
 
@@ -12,8 +13,7 @@ Course project for UCI CS 175 (Winter 2026).
 handtex/
   backend/     Flask API for model inference
   models/      ViT model definition
-  train/       Training scripts
-  notebooks/   EDA and experimentation
+  notebooks/   Model training and saving 
   frontend/    HTML5 Canvas UI
   data/        Dataset (git-ignored, see below)
 ```
@@ -41,6 +41,10 @@ pip install -r requirements.txt
 - Pillow
 - Flask
 
-## Status
+## Kaggle Training
 
-Early development. Model, training loop, backend API, and frontend are all stubbed out.
+1) Add Notebook (vit.ipynb for example) into a kaggle notebook with accelerator set to a GPU. 
+2) Zip the mathwriting dataset and add as input. 
+3) Change the paths in the notebook to match. 
+4) Save version and run all to run in background. 
+
