@@ -2,3 +2,4 @@ data/
 .venv/
 *.pkl
 __pycache__/
+*.zip
