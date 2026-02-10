@@ -1,1 +1,8 @@
 data/
+checkpoints/
+output/
+*.pkl
+__pycache__/
+.venv/
+CLAUDE.md
+.env
