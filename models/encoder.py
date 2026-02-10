@@ -15,7 +15,7 @@ class CNNEncoder(nn.Module):
         self.pool3 = nn.MaxPool2d(2, 2)
         
         self.flatten = nn.Flatten()
-        self.fc = nn.Linear(128*16*16, embedding_dim)  # final feature vector to embedding_dim
+        self.fc = nn.Linear(128*32*32, embedding_dim)  # final feature vector to embedding_dim
         self.ln = nn.LayerNorm(embedding_dim)  # normalize features
 
     def forward(self, x):
@@ -35,7 +35,7 @@ class CNNEncoder(nn.Module):
 # example usage
 if __name__ == "__main__":
     # array with random numbers between 0 and 1
-    sample_input = np.random.rand(1, 1, 128, 128).astype(np.float32)  # shape (batch_size, channels, height, width)
+    sample_input = np.random.rand(1, 1, 256, 256).astype(np.float32)  # shape (batch_size, channels, height, width)
     sample_input = torch.tensor(sample_input)
     encoder = CNNEncoder()
     features = encoder(sample_input)  # forward pass, calls the call method

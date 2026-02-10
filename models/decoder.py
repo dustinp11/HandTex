@@ -2,22 +2,24 @@ import torch
 import torch.nn as nn
 
 class RNNDecoder(nn.Module):
-    def __init__(self, vocab_size, embedding_dim=256, rnn_units=512):
+    def __init__(self, vocab_size, embedding_dim=256, rnn_units=512, enc_dim=256):
         super().__init__()
         self.embedding = nn.Embedding(vocab_size, embedding_dim)  # map token ids to embeddings
-        self.lstm = nn.LSTM(embedding_dim, rnn_units, batch_first=True)  # input size is embedding_dim, output size is rnn_units
-        self.enc_to_h = nn.Linear(embedding_dim, rnn_units)  # change encoder features to initial hidden state size
+        self.lstm = nn.LSTM(embedding_dim + enc_dim, rnn_units, batch_first=True)  # input size is embedding_dim + enc_dim, output size is rnn_units
+        self.enc_to_h = nn.Linear(enc_dim, rnn_units)  # change encoder features to initial hidden state size
         self.fc = nn.Linear(rnn_units, vocab_size)  # final output: logits for each token, size vocab_size
 
     def forward(self, x, encoder_features, hidden=None):
-        x = self.embedding(x)  # turn token IDs into embeddings
-
+        B, T = x.shape
+        x_embed = self.embedding(x)  # turn token IDs into embeddings
+        enc_repeat = encoder_features.unsqueeze(1).repeat(1, T, 1)  # repeat encoder features for each time step
+        x_input = torch.cat([x_embed, enc_repeat], dim=-1)  # concatenate embeddings with encoder features for each time step
         if hidden is None:
             h0 = torch.tanh(self.enc_to_h(encoder_features)).unsqueeze(0)  # map encoder features to initial hidden state
             c0 = torch.zeros_like(h0)  # initial cell state
             hidden = (h0, c0)
 
-        output, hidden = self.lstm(x, hidden)  # returns output for all time steps and final hidden state
+        output, hidden = self.lstm(x_input, hidden)  # returns output for all time steps and final hidden state
         logits = self.fc(output)  # (batch, seq_len, vocab_size)
         # state_h is the final hidden state of the current output and state_c is a memory to remember important info from previous tokens
         return logits, hidden
