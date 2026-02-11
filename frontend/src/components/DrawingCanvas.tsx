@@ -1,4 +1,4 @@
-import React, { useMemo, useState } from "react";
+import React, { useMemo, useRef, useState } from "react";
 import { View, PanResponder } from "react-native";
 import Svg, { Polyline } from "react-native-svg";
 
@@ -15,6 +15,7 @@ export default function DrawingCanvas({
   strokeWidth?: number;
 }) {
   const [activeStroke, setActiveStroke] = useState<Stroke>([]);
+  const activeStrokeRef = useRef<Stroke>([]); // ✅ always current
 
   const panResponder = useMemo(
     () =>
@@ -24,20 +25,34 @@ export default function DrawingCanvas({
 
         onPanResponderGrant: (evt) => {
           const { locationX, locationY } = evt.nativeEvent;
-          setActiveStroke([{ x: locationX, y: locationY }]);
+          const start: Stroke = [{ x: locationX, y: locationY }];
+          activeStrokeRef.current = start;
+          setActiveStroke(start);
         },
 
         onPanResponderMove: (evt) => {
           const { locationX, locationY } = evt.nativeEvent;
-          setActiveStroke((prev) => [...prev, { x: locationX, y: locationY }]);
+          const next = [...activeStrokeRef.current, { x: locationX, y: locationY }];
+          activeStrokeRef.current = next;
+          setActiveStroke(next);
         },
 
         onPanResponderRelease: () => {
-          if (activeStroke.length > 1) onChangeStrokes([...strokes, activeStroke]);
+          const stroke = activeStrokeRef.current;
+          if (stroke.length > 1) {
+            onChangeStrokes([...strokes, stroke]);
+          }
+          activeStrokeRef.current = [];
+          setActiveStroke([]);
+        },
+
+        onPanResponderTerminate: () => {
+          // if gesture gets interrupted
+          activeStrokeRef.current = [];
           setActiveStroke([]);
         },
       }),
-    [strokes, activeStroke, onChangeStrokes]
+    [strokes, onChangeStrokes] // ✅ no activeStroke dependency
   );
 
   return (
@@ -54,6 +69,7 @@ export default function DrawingCanvas({
             strokeLinecap="round"
           />
         ))}
+
         {activeStroke.length > 0 && (
           <Polyline
             points={activeStroke.map((p) => `${p.x},${p.y}`).join(" ")}

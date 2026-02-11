@@ -14,11 +14,12 @@ import DrawingCanvas from "../src/components/DrawingCanvas";
 import type { Stroke } from "../src/components/DrawingCanvas";
 import { getNote, upsertNote } from "../src/db";
 
-import ViewShot, { captureRef } from "react-native-view-shot";
-import * as FileSystem from "expo-file-system";
+import ViewShot from "react-native-view-shot";
+import * as FileSystem from "expo-file-system/legacy";
 
 export default function DrawScreen() {
-  const captureTargetRef = useRef<React.ElementRef<typeof View> | null>(null);
+  // ✅ Correct: capture the ViewShot itself
+  const viewShotRef = useRef<any>(null);
 
   const FLASK_URL = "http://172.31.241.116:5000";
 
@@ -52,11 +53,14 @@ export default function DrawScreen() {
 
   async function onPredict() {
     try {
-      if (!captureTargetRef.current) throw new Error("Canvas not ready");
+      if (!viewShotRef.current) throw new Error("ViewShot not ready");
       setPredicting(true);
 
-      // Capture PNG of the drawing area
-      const uri = await captureRef(captureTargetRef, {
+      // (Optional) tiny delay so final stroke render commits
+      await new Promise((r) => setTimeout(r, 50));
+
+      // ✅ Correct capture call
+      const uri: string = await viewShotRef.current.capture?.({
         format: "png",
         quality: 1,
         result: "tmpfile",
@@ -72,7 +76,7 @@ export default function DrawScreen() {
         throw new Error(`Captured image looks empty (size=${size} bytes)`);
       }
 
-      // ✅ Expo-compatible multipart upload (no enum needed)
+      // ✅ Expo-compatible multipart upload
       const uploadRes = await FileSystem.uploadAsync(`${FLASK_URL}/predict`, uri, {
         httpMethod: "POST",
         uploadType: "multipart" as any,
@@ -202,15 +206,13 @@ export default function DrawScreen() {
             ) : null}
           </View>
 
+          {/* ✅ Capture THIS */}
           <ViewShot
+            ref={viewShotRef}
             options={{ format: "png", quality: 1, result: "tmpfile" }}
             style={{ flex: 1, backgroundColor: "white" }}
           >
-            <View
-              ref={captureTargetRef}
-              collapsable={false}
-              style={{ flex: 1, backgroundColor: "white" }}
-            >
+            <View collapsable={false} style={{ flex: 1, backgroundColor: "white" }}>
               <DrawingCanvas strokes={strokes} onChangeStrokes={setStrokes} />
             </View>
           </ViewShot>
