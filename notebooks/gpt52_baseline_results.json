@@ -1,0 +1,362 @@
+{
+  "summary": {
+    "model": "gpt-5.2",
+    "num_few_shot": 3,
+    "num_samples": 50,
+    "seed": 42,
+    "exact_match_accuracy": 0.08,
+    "avg_normalized_edit_distance": 0.3035
+  },
+  "results": [
+    {
+      "index": 5238,
+      "ground_truth": "WA_{k}=TH_{k}*FF",
+      "prediction": "WA_{k}=T_{H_{k}}\\ast FF",
+      "exact_match": false,
+      "normalized_edit_distance": 0.3478
+    },
+    {
+      "index": 912,
+      "ground_truth": "tr_{B}(|\\psi\\rangle\\langle\\psi|)=\\rho",
+      "prediction": "-I_{B}(\\psi)\\langle\\psi|\\rangle=p",
+      "exact_match": false,
+      "normalized_edit_distance": 0.5135
+    },
+    {
+      "index": 204,
+      "ground_truth": "O(\\sqrt{b-a})",
+      "prediction": "o(\\sqrt{b-q})",
+      "exact_match": false,
+      "normalized_edit_distance": 0.1538
+    },
+    {
+      "index": 6074,
+      "ground_truth": "\\sigma=|c|\\frac{\\Delta t}{\\Delta x}\\in N",
+      "prediction": "\\sigma=|u|\\frac{\\Delta t}{\\Delta x}\\in N",
+      "exact_match": false,
+      "normalized_edit_distance": 0.025
+    },
+    {
+      "index": 2253,
+      "ground_truth": "\\chi=\\frac{n\\mu_{0}\\mu^{2}}{3k_{B}T}",
+      "prediction": "\\lambda=\\frac{nN_{0}\\mu^{2}}{3k_{B}T}",
+      "exact_match": false,
+      "normalized_edit_distance": 0.2432
+    },
+    {
+      "index": 2006,
+      "ground_truth": "U=\\frac{1}{R}=\\frac{\\dot{Q}_{A}}{\\Delta T}=\\frac{k}{L}",
+      "prediction": "U=\\frac{1}{R}=\\frac{QA}{\\Delta T}=\\frac{k}{L}",
+      "exact_match": false,
+      "normalized_edit_distance": 0.1667
+    },
+    {
+      "index": 1828,
+      "ground_truth": "dz-E_{t}h(x,t)dt",
+      "prediction": "dz-E_{t}h(x,t)\\,dt",
+      "exact_match": false,
+      "normalized_edit_distance": 0.1111
+    },
+    {
+      "index": 1143,
+      "ground_truth": "2^{k}t_{0}",
+      "prediction": "2^{k}t_{0}",
+      "exact_match": true,
+      "normalized_edit_distance": 0.0
+    },
+    {
+      "index": 6033,
+      "ground_truth": "R_{S}\\approx R_{H}sec(\\alpha)",
+      "prediction": "R_{s}\\sim R_{H}\\sec(\\alpha)",
+      "exact_match": false,
+      "normalized_edit_distance": 0.2759
+    },
+    {
+      "index": 839,
+      "ground_truth": "f^{-1}(y)=\\pm\\sqrt{y}",
+      "prediction": "f^{-1}(y)=f(y)",
+      "exact_match": false,
+      "normalized_edit_distance": 0.4762
+    },
+    {
+      "index": 5543,
+      "ground_truth": "(a,b):\\Sigma_{(x:A)}B(x)",
+      "prediction": "(a,b):\\Sigma_{(x,A)}B(x)",
+      "exact_match": false,
+      "normalized_edit_distance": 0.0417
+    },
+    {
+      "index": 6067,
+      "ground_truth": "H^{\\dagger}B^{\\mu\\nu}B_{\\mu\\nu}H/\\Lambda^{2}",
+      "prediction": "L\\left(1+\\beta^{\\mu\\nu}B_{\\mu\\nu},\\frac{1}{\\lambda^{2}}\\right)",
+      "exact_match": false,
+      "normalized_edit_distance": 0.5323
+    },
+    {
+      "index": 7308,
+      "ground_truth": "lim_{\\Delta x\\rightarrow0}g(\\Delta x)=0",
+      "prediction": "\\lim_{\\Delta x\\to 0} g(\\Delta x)=0",
+      "exact_match": false,
+      "normalized_edit_distance": 0.2564
+    },
+    {
+      "index": 4467,
+      "ground_truth": "[\\Omega]\\in H^{3}(M,R)",
+      "prediction": "[\\Omega]\\in H^{3}(M,\\mathbb{R})",
+      "exact_match": false,
+      "normalized_edit_distance": 0.2903
+    },
+    {
+      "index": 712,
+      "ground_truth": "max_{X}E_{kl}(r_{k}^{B},r_{l}^{X})",
+      "prediction": "\\max_{x} \\mathbb{E}_{\\kappa_{0}}\\left(r_{k,\\ell}^{B}\\right)",
+      "exact_match": false,
+      "normalized_edit_distance": 0.6271
+    },
+    {
+      "index": 4837,
+      "ground_truth": "e^{(\\alpha\\beta^{*}-\\alpha^{*}\\beta)/2}",
+      "prediction": "(\\alpha\\beta^{*}-\\alpha^{*}\\beta)/2",
+      "exact_match": false,
+      "normalized_edit_distance": 0.1026
+    },
+    {
+      "index": 3456,
+      "ground_truth": "X=|X|e^{jarg(X)}",
+      "prediction": "X=\\lvert X\\rvert e^{j\\arg(X)}",
+      "exact_match": false,
+      "normalized_edit_distance": 0.5172
+    },
+    {
+      "index": 260,
+      "ground_truth": "Div^{0}(K)/P(K)",
+      "prediction": "\\operatorname{Div}(K)/P(K)",
+      "exact_match": false,
+      "normalized_edit_distance": 0.6154
+    },
+    {
+      "index": 244,
+      "ground_truth": "\\eta_{+-}\\ne\\eta_{00}",
+      "prediction": "\\eta_{t}-f\\eta_{0}u",
+      "exact_match": false,
+      "normalized_edit_distance": 0.3333
+    },
+    {
+      "index": 767,
+      "ground_truth": "(\\rho=1000\\frac{kg}{m^{3}})",
+      "prediction": "\\left(P-1066\\,\\frac{\\mathrm{kg}}{\\mathrm{m}^{3}}\\right)",
+      "exact_match": false,
+      "normalized_edit_distance": 0.6545
+    },
+    {
+      "index": 1791,
+      "ground_truth": "a^{n}a^{-n}=1",
+      "prediction": "a^{n}a^{-n}=1",
+      "exact_match": true,
+      "normalized_edit_distance": 0.0
+    },
+    {
+      "index": 1905,
+      "ground_truth": "-\\frac{m}{2}(\\overline{\\nu}^{C}\\nu+\\overline{\\nu}\\nu^{C})",
+      "prediction": "-\\frac{m}{2}\\left(v^{2}+\\dot{v}^{2}\\right)",
+      "exact_match": false,
+      "normalized_edit_distance": 0.5789
+    },
+    {
+      "index": 4139,
+      "ground_truth": "Li(x)=\\int_{0}^{x}\\frac{dt}{log(t)}",
+      "prediction": "L_{i}(x)=\\int_{0}^{x}\\frac{dt}{\\log t}",
+      "exact_match": false,
+      "normalized_edit_distance": 0.1579
+    },
+    {
+      "index": 4931,
+      "ground_truth": "Q=(p-iW)b",
+      "prediction": "Q=(p-i^{W})b",
+      "exact_match": false,
+      "normalized_edit_distance": 0.25
+    },
+    {
+      "index": 217,
+      "ground_truth": "S\\in R^{I_{1}\\times I_{2}\\times...\\times I_{N}}",
+      "prediction": "S\\subseteq\\mathbb{R}^{I_{1}\\times I_{2}\\times\\cdots\\times I_{N}}",
+      "exact_match": false,
+      "normalized_edit_distance": 0.3594
+    },
+    {
+      "index": 4597,
+      "ground_truth": "a_{\\pi}=a_{y}=0.5",
+      "prediction": "q_{\\pi}=a_{q}=0.5",
+      "exact_match": false,
+      "normalized_edit_distance": 0.1176
+    },
+    {
+      "index": 1628,
+      "ground_truth": "n,m=1,...,l_{\\mu}",
+      "prediction": "n,m=1,\\ldots,\\ell_{m}",
+      "exact_match": false,
+      "normalized_edit_distance": 0.5238
+    },
+    {
+      "index": 5865,
+      "ground_truth": "logB\\in i[-\\pi,\\pi)",
+      "prediction": "\\log B\\in i[-\\pi,\\pi)",
+      "exact_match": false,
+      "normalized_edit_distance": 0.0952
+    },
+    {
+      "index": 5323,
+      "ground_truth": "I_{i}\\rightarrow I_{i}+1",
+      "prediction": "I:\\rightarrow I_{1}+1",
+      "exact_match": false,
+      "normalized_edit_distance": 0.2083
+    },
+    {
+      "index": 5745,
+      "ground_truth": "Y_{W(q)}=1/3",
+      "prediction": "(w(g)=\\frac{1}{3}",
+      "exact_match": false,
+      "normalized_edit_distance": 0.8824
+    },
+    {
+      "index": 4464,
+      "ground_truth": "\\frac{R_{U}}{r_{e}}\\approx\\frac{r_{H}}{r_{e}}\\approx10^{42}",
+      "prediction": "\\frac{R_{u}}{r_{e}}\\sim\\frac{r_{H}}{r_{e}}\\sim10^{42}",
+      "exact_match": false,
+      "normalized_edit_distance": 0.2203
+    },
+    {
+      "index": 3436,
+      "ground_truth": "x^{\\prime}=\\frac{x-vt}{\\sqrt{1-\\frac{v^{2}}{c^{2}}}}",
+      "prediction": "x'=\\frac{x-vt}{\\sqrt{1-\\frac{v^{2}}{c^{2}}}}",
+      "exact_match": false,
+      "normalized_edit_distance": 0.1731
+    },
+    {
+      "index": 1805,
+      "ground_truth": "1(",
+      "prediction": "(",
+      "exact_match": false,
+      "normalized_edit_distance": 0.5
+    },
+    {
+      "index": 3679,
+      "ground_truth": "\\underline{T}(t)=\\frac{d\\gamma}{dt}",
+      "prediction": "I(t)=\\frac{\\partial f}{\\partial t}",
+      "exact_match": false,
+      "normalized_edit_distance": 0.8286
+    },
+    {
+      "index": 4827,
+      "ground_truth": "1/R_{c}=2L_{s}",
+      "prediction": "1/R_{c}=2Ls",
+      "exact_match": false,
+      "normalized_edit_distance": 0.2143
+    },
+    {
+      "index": 2278,
+      "ground_truth": "tan\\varphi^{\\prime}=(\\frac{c_{1}}{c_{2}})",
+      "prediction": "\\tan e'= \\left(\\frac{c_{1}}{c_{2}}\\right)",
+      "exact_match": false,
+      "normalized_edit_distance": 0.5366
+    },
+    {
+      "index": 6630,
+      "ground_truth": "\\forall i,a_{ii}\\ne0",
+      "prediction": "V_{i,a_{i}}\\neq 0",
+      "exact_match": false,
+      "normalized_edit_distance": 0.55
+    },
+    {
+      "index": 7121,
+      "ground_truth": "X_{1}(\\frac{1}{z^{*}})",
+      "prediction": "x_{1}\\left(\\frac{1}{z^{x}}\\right)",
+      "exact_match": false,
+      "normalized_edit_distance": 0.3939
+    },
+    {
+      "index": 53,
+      "ground_truth": "R\\ge(2^{a-1}-1)",
+      "prediction": "R\\ge(2^{n-1}-1)",
+      "exact_match": false,
+      "normalized_edit_distance": 0.0667
+    },
+    {
+      "index": 6216,
+      "ground_truth": "x=\\frac{i}{f}=\\frac{S}{f}\\sqrt{t}",
+      "prediction": "X=\\frac{i}{f}=\\frac{s}{f}\\sqrt{t}",
+      "exact_match": false,
+      "normalized_edit_distance": 0.0606
+    },
+    {
+      "index": 6601,
+      "ground_truth": "P_{f}(N)",
+      "prediction": "P_{f}(N)",
+      "exact_match": true,
+      "normalized_edit_distance": 0.0
+    },
+    {
+      "index": 1307,
+      "ground_truth": "\\frac{1}{2\\pi}\\frac{d}{dt}\\phi(t)",
+      "prediction": "\\frac{1}{2\\pi}\\frac{d}{dt}\\phi(t)",
+      "exact_match": true,
+      "normalized_edit_distance": 0.0
+    },
+    {
+      "index": 5719,
+      "ground_truth": "v_{t}=90\\sqrt{d}",
+      "prediction": "V_{t}=g_{t}\\sqrt{2}",
+      "exact_match": false,
+      "normalized_edit_distance": 0.3684
+    },
+    {
+      "index": 3462,
+      "ground_truth": "I_{hkl}\\propto|F(hkl)|^{2}",
+      "prediction": "I_{hkl}\\propto\\left|F(hkl)\\right|^{2}",
+      "exact_match": false,
+      "normalized_edit_distance": 0.2973
+    },
+    {
+      "index": 2787,
+      "ground_truth": "1=\\sqrt{(N_{x}^{2}+N_{z}^{2})}",
+      "prediction": "1=\\sqrt{\\left(N_{x}^{2}+N_{z}^{2}\\right)}",
+      "exact_match": false,
+      "normalized_edit_distance": 0.2683
+    },
+    {
+      "index": 2276,
+      "ground_truth": "3^{t}-t>3^{r}-r",
+      "prediction": "\\}-t\\}\\,>\\,\\}^{r}-r",
+      "exact_match": false,
+      "normalized_edit_distance": 0.5263
+    },
+    {
+      "index": 1273,
+      "ground_truth": "distance=tan(\\theta)\\frac{v}{u}",
+      "prediction": "distance=\\tan(\\theta)\\frac{v}{u}",
+      "exact_match": false,
+      "normalized_edit_distance": 0.0312
+    },
+    {
+      "index": 1763,
+      "ground_truth": "\\prod_{n=1}^{\\infty}(1-\\frac{p}{p^{3}-1})",
+      "prediction": "\\prod_{n=1}^{\\infty}\\left(1-\\frac{p}{p^{3}-1}\\right)",
+      "exact_match": false,
+      "normalized_edit_distance": 0.2115
+    },
+    {
+      "index": 6254,
+      "ground_truth": "D_{RR}(X,X)=\\frac{2\\sigma}{\\sqrt{3}}",
+      "prediction": "D_{RR}(\\chi,\\chi)=\\frac{20}{\\sqrt{3}}",
+      "exact_match": false,
+      "normalized_edit_distance": 0.3784
+    },
+    {
+      "index": 2757,
+      "ground_truth": "-1=e^{\\frac{2\\pi i}{2}}=e^{\\pi i}",
+      "prediction": "1=e^{\\frac{2\\pi i}{1}}=e^{2\\pi i}",
+      "exact_match": false,
+      "normalized_edit_distance": 0.0909
+    }
+  ]
+}
