@@ -31,6 +31,76 @@ function getDefaultBackendUrl() {
   return process.env.EXPO_PUBLIC_BACKEND_URL ?? 'http://localhost:5000';
 }
 
+import { WebView } from "react-native-webview";
+
+function LatexView({ latex, display = true }) {
+  const safeLatex = (latex ?? "")
+    .replace(/\\/g, "\\\\")
+    .replace(/`/g, "\\`")
+    .replace(/\$\{/g, "\\${"); // avoid template literal interpolation edge cases
+
+  const html = `
+  <!doctype html>
+  <html>
+    <head>
+      <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+      <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.css">
+      <script src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.js"></script>
+      <style>
+        html, body { margin: 0; padding: 0; background: transparent; }
+        #wrap { padding: 10px; font-size: 22px; color: #111; }
+      </style>
+    </head>
+    <body>
+      <div id="wrap">Loading…</div>
+      <script>
+        function renderNow() {
+          const el = document.getElementById("wrap");
+          const expr = \`${safeLatex}\`;
+
+          if (!window.katex) {
+            el.textContent = "KaTeX failed to load (no internet / blocked CDN).";
+            return;
+          }
+
+          try {
+            window.katex.render(expr, el, {
+              displayMode: ${display ? "true" : "false"},
+              throwOnError: false
+            });
+          } catch (e) {
+            el.textContent = "KaTeX error: " + e.message;
+          }
+        }
+
+        // Wait until katex exists (CDN can be slightly delayed)
+        (function waitForKatex() {
+          let tries = 0;
+          const t = setInterval(() => {
+            tries++;
+            if (window.katex || tries > 40) {
+              clearInterval(t);
+              renderNow();
+            }
+          }, 50);
+        })();
+      </script>
+    </body>
+  </html>`;
+
+  return (
+    <WebView
+      originWhitelist={["*"]}
+      source={{ html }}
+      javaScriptEnabled
+      domStorageEnabled
+      mixedContentMode="always"
+      scrollEnabled={false}
+      style={{ flex: 1, backgroundColor: "transparent" }}
+    />
+  );
+}
+
 function pointsToSvgPath(points) {
   if (points.length === 0) return '';
   const [first, ...rest] = points;
@@ -227,7 +297,11 @@ export default function App() {
         {/* LaTeX result */}
         {latexResult !== '' && (
           <View style={styles.resultBox}>
-            <Text style={styles.resultLabel}>LaTeX</Text>
+            <Text style={styles.resultLabel}>Rendered</Text>
+              <View style={{ height: 140, width: "100%", backgroundColor: "#fff", borderRadius: 8, overflow: "hidden" }}>
+                <LatexView latex={latexResult} display={true} />
+              </View>
+            <Text style={[styles.resultLabel, { marginTop: 10 }]}>Raw LaTeX</Text>
             <Text style={styles.resultText} selectable>{latexResult}</Text>
           </View>
         )}
