@@ -41,9 +41,27 @@ def decode_tokens(token_ids):
     return "".join(inv_vocab.get(t, "") for t in filtered)
 
 def preprocess_pil_to_tensor(pil_img):
-    # Mirror notebook preprocessing
-    img = pil_img.convert("L").resize((256, 256))
-    arr = np.array(img, dtype=np.float32) / 255.0  # [0,1], shape (256,256)
+    img = pil_img.convert("L")
+    arr = np.array(img)
+
+    # Crop to bounding box of ink (non-white pixels) so content fills the frame
+    mask = arr < 240
+    if mask.any():
+        rows = np.where(mask.any(axis=1))[0]
+        cols = np.where(mask.any(axis=0))[0]
+        pad = 10
+        r0, r1 = max(rows[0] - pad, 0), min(rows[-1] + pad, arr.shape[0])
+        c0, c1 = max(cols[0] - pad, 0), min(cols[-1] + pad, arr.shape[1])
+        img = Image.fromarray(arr[r0:r1, c0:c1])
+
+    # Pad to square so resize doesn't distort aspect ratio
+    w, h = img.size
+    side = max(w, h)
+    padded = Image.new("L", (side, side), color=255)
+    padded.paste(img, ((side - w) // 2, (side - h) // 2))
+    img = padded.resize((256, 256), Image.LANCZOS)
+
+    arr = np.array(img, dtype=np.float32) / 255.0
     t = torch.from_numpy(arr).unsqueeze(0).unsqueeze(0)  # (1,1,256,256)
     t = t.repeat(1, 3, 1, 1)  # (1,3,256,256)
     return t.to(DEVICE)

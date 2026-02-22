@@ -9,7 +9,11 @@ import {
   TextInput,
   Alert,
   Platform,
+  Dimensions,
 } from 'react-native';
+
+const { width: SW, height: SH } = Dimensions.get('window');
+const CANVAS_SIZE = Math.min(SW - 24, SH * 0.55);
 import { SafeAreaView, SafeAreaProvider } from 'react-native-safe-area-context';
 import Svg, { Path } from 'react-native-svg';
 import { captureRef } from 'react-native-view-shot';
@@ -183,7 +187,7 @@ export default function App() {
     }
     setLoading(true);
     try {
-      const uri = await captureRef(canvasRef, { format: 'png', quality: 1.0 });
+      const uri = await captureRef(canvasRef, { format: 'png', quality: 1.0, pixelRatio: 1 });
 
       const formData = new FormData();
       formData.append('image', { uri, type: 'image/png', name: 'canvas.png' });
@@ -372,7 +376,9 @@ const styles = StyleSheet.create({
   },
 
   canvas: {
-    height: 280,
+    width: CANVAS_SIZE,
+    height: CANVAS_SIZE,
+    alignSelf: 'center',
     margin: 12,
     backgroundColor: '#fff',
     borderRadius: 10,
@@ -418,7 +424,7 @@ const styles = StyleSheet.create({
     borderColor: '#bfdbfe',
   },
   resultLabel: { fontSize: 11, fontWeight: '600', color: '#3b82f6', marginBottom: 4, letterSpacing: 0.5 },
-  resultText: { fontSize: 15, fontFamily: MONO, color: '#1e3a5f', lineHeight: 22 },
+  resultRaw: { fontSize: 12, fontFamily: MONO, color: '#6b7280', marginTop: 4 },
 
   historyScroll: { flex: 1 },
   historyContent: { paddingHorizontal: 12, paddingBottom: 20 },
