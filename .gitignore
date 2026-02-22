@@ -1,8 +1,14 @@
 data/
 checkpoints/
 output/
+cache/
 *.pkl
 __pycache__/
 .venv/
 CLAUDE.md
 .env
+
+# Model weights — never push these
+*.pt
+backend/artifacts/
+notebooks/artifacts/
