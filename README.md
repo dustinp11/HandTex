@@ -14,7 +14,7 @@ handtex/
   backend/     Flask API for model inference
   models/      ViT model definition
   notebooks/   Model training and saving 
-  frontend/    HTML5 Canvas UI
+  mobile/      The mobile interface with support for tablets
   data/        Dataset (git-ignored, see below)
 ```
 
@@ -47,4 +47,17 @@ pip install -r requirements.txt
 2) Zip the mathwriting dataset and add as input. 
 3) Change the paths in the notebook to match. 
 4) Save version and run all to run in background. 
+
+
+## Running evaluations
+
+In notebooks/evals.ipynb, you can run evaluation on the validation/testing set. The notebook requires you to have saved the model weights and tokenizer in artifacts. Example of how this might look:
+
+```
+notebooks/
+  artifacts/     
+    lstm_tokenizer.pkl    The tokenizer used for LSTM tokenization (also used for transformer implementation)
+    lstm.pt               The model weights for the ViT+LSTM  
+    transformer.pt        The model weights for the ViT+Transformer
+```
 
