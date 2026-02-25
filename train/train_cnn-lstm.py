@@ -21,7 +21,7 @@ learning_rate = 1e-3
 DEVICE = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 
 encoder = CNNEncoder(embedding_dim=256).to(DEVICE)
-decoder = RNNDecoder(vocab_size=VOCAB_SIZE, embedding_dim=256, rnn_units=512).to(DEVICE)
+decoder = RNNDecoder(vocab_size=VOCAB_SIZE, embedding_dim=256, rnn_units=512, enc_dim=256).to(DEVICE)
 
 images = torch.load(data_dir / "images_train.pt")  # (N, 1, 128, 128)
 tokens = torch.load(data_dir / "tokens_train.pt")  # (N, seq_len)
