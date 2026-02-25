@@ -1,3 +1,0 @@
-
-class VitModel: 
-    pass
