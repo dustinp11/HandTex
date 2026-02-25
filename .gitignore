@@ -2,4 +2,6 @@ data/
 .venv/
 *.pkl
 __pycache__/
-*.zip*.pt
+*.zip
+*.pt
+.DS_Store
