@@ -2,4 +2,4 @@ data/
 .venv/
 *.pkl
 __pycache__/
-*.zip
+*.zip*.pt
