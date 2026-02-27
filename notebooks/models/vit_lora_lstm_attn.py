@@ -162,4 +162,93 @@ class ViTLatexModelLoRA(nn.Module):
 
         return output_tokens
     
+    @torch.no_grad()
+    def generate_beam(
+        self,
+        image,
+        max_len=150,
+        sos_idx=1,
+        eos_idx=2,
+        beam_size=5,
+        length_penalty=0.7,   # 0.6–1.0 is common; lower favors shorter
+        min_len=1
+    ):
+        """
+        Beam search for your step-wise decoder.
+
+        Returns: list[int] token ids (excluding SOS, excluding EOS)
+        """
+        self.eval()
+
+        # Encode once
+        enc = self.encoder(pixel_values=image).last_hidden_state
+        enc_mem = enc[:, 1:, :]  # (1, N, D)
+
+        device = image.device
+        sos = torch.tensor([[sos_idx]], device=device, dtype=torch.long)
+
+        # Each beam: (tokens_tensor [1, t], score (float), hidden_state)
+        beams = [(sos, 0.0, None)]
+        finished = []
+
+        for t in range(max_len):
+            candidates = []
+
+            for tokens, score, hidden in beams:
+                last_tok = tokens[:, -1:]  # (1,1)
+
+                # One-step decode
+                logits, new_hidden = self.decoder(last_tok, enc_mem=enc_mem, hidden_state=hidden)
+                log_probs = F.log_softmax(logits[:, -1, :], dim=-1)  # (1, V)
+
+                # Take top-k next tokens
+                topk_logp, topk_idx = torch.topk(log_probs, beam_size, dim=-1)  # (1,k),(1,k)
+
+                for k in range(beam_size):
+                    nxt = topk_idx[0, k].item()
+                    nxt_logp = topk_logp[0, k].item()
+
+                    nxt_tokens = torch.cat([tokens, torch.tensor([[nxt]], device=device)], dim=1)
+                    nxt_score = score + nxt_logp
+
+                    # If EOS and meets min length -> finish
+                    if nxt == eos_idx and (t + 1) >= min_len:
+                        finished.append((nxt_tokens, nxt_score))
+                    else:
+                        candidates.append((nxt_tokens, nxt_score, new_hidden))
+
+            if not candidates:
+                break
+
+            # Keep best beams by length-penalized score (for ranking only)
+            def rank(item):
+                toks, sc, _hid = item
+                L = toks.size(1) - 1  # exclude SOS from length
+                L = max(L, 1)
+                return sc / (L ** length_penalty)
+
+            candidates.sort(key=rank, reverse=True)
+            beams = candidates[:beam_size]
+
+            # Optional early stop: if we have enough finished and best finished beats best alive
+            if finished:
+                best_finished = max(finished, key=lambda x: x[1] / (max(x[0].size(1)-1,1) ** length_penalty))
+                best_alive = beams[0]
+                if (best_finished[1] / (max(best_finished[0].size(1)-1,1) ** length_penalty)) >= rank(best_alive):
+                    # you can break here if you want more speed; leaving it off is safer
+                    pass
+
+        # Choose best finished if available, else best alive
+        if finished:
+            finished.sort(key=lambda x: x[1] / (max(x[0].size(1)-1,1) ** length_penalty), reverse=True)
+            best_tokens = finished[0][0]
+        else:
+            best_tokens = max(beams, key=lambda x: x[1] / (max(x[0].size(1)-1,1) ** length_penalty))[0]
+
+        # Strip SOS, then strip EOS if present
+        out = best_tokens[0].tolist()[1:]
+        if eos_idx in out:
+            out = out[:out.index(eos_idx)]
+        return out
+    
 
