@@ -7,7 +7,7 @@ __pycache__/
 .venv/
 CLAUDE.md
 .env
-
+.DS_Store
 # Model weights — never push these
 *.pt
 backend/artifacts/
