@@ -11,4 +11,4 @@ CLAUDE.md
 # Model weights — never push these
 *.pt
 backend/artifacts/
-notebooks/artifacts/
+src/artifacts/
