@@ -166,7 +166,7 @@ class ViTLatexModelLoRA(nn.Module):
         sos_idx=1,
         eos_idx=2,
         beam_size=5,
-        length_penalty=0.7,   # 0.6–1.0 is common; lower favors shorter
+        length_penalty=1.0,   # 0.6–1.0 is common; lower favors shorter
         min_len=1
     ):
         """
