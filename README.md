@@ -1,63 +1,31 @@
-# HandTeX
+# HandTeX — Handwriting to LaTeX
+# Course project for UCI CS 175 (Winter 2026)
+# Encoder-decoder models that convert handwritten math images to LaTeX strings.
+# Dataset: deepcopy/MathWriting-human on HuggingFace (~230k samples).
 
-> **WIP**
+# External libraries used
+Libraries used:
+    - PyTorch (https://pytorch.org/)
+    - torchvision (https://pytorch.org/vision/)
+    - HuggingFace Transformers (https://github.com/huggingface/transformers)
+    - HuggingFace Datasets (https://github.com/huggingface/datasets)
+    - HuggingFace PEFT / LoRA (https://github.com/huggingface/peft)
+    - Pillow (https://python-pillow.org/)
+    - Flask (https://flask.palletsprojects.com/)
+    - TensorFlow/Keras (https://www.tensorflow.org/) — used only for tokenizer utilities
+    - NumPy (https://numpy.org/)
 
-Handwriting-to-LaTeX: draw a math equation on a canvas and get the LaTeX back. Built with a pretrained Vision Transformer (ViT) encoder + custom LSTM decoder trained on the [MathWriting](https://huggingface.co/datasets/deepcopy/MathWriting-human). Training is done through Kaggle notebooks. 
+# Publicly available code(s) used in this project
+Publicly available codes used:
+    - facebook/dinov2-base pretrained weights (https://huggingface.co/facebook/dinov2-base). Not modified, used as the frozen encoder backbone with LoRA adapters applied on top.
 
-
-Course project for UCI CS 175 (Winter 2026).
-
-## Structure
-
-```
-handtex/
-  backend/     Flask API for model inference
-  models/      ViT model definition
-  notebooks/   Model training and saving 
-  mobile/      The mobile interface with support for tablets
-  data/        Dataset (git-ignored, see below)
-```
-
-## Getting the Data
-
-The dataset is not included in the repo. It's hosted on HuggingFace as [deepcopy/MathWriting-human](https://huggingface.co/datasets/deepcopy/MathWriting-human) (~1.4 GB download, ~230k training examples of handwritten math images paired with LaTeX strings).
-
-To download and save it locally, just run get_data.py file. 
-
-
-This will create `data/mathwriting/` with train, test, and val splits in Arrow format. The `data/` directory is git-ignored.
-
-## Setup
-
-```bash
-pip install -r requirements.txt
-```
-
-### Requirements
-
-- Python 3.12+
-- PyTorch
-- HuggingFace `datasets`
-- Pillow
-- Flask
-
-## Kaggle Training
-
-1) Add Notebook (vit.ipynb for example) into a kaggle notebook with accelerator set to a GPU. 
-2) Zip the mathwriting dataset and add as input. 
-3) Change the paths in the notebook to match. 
-4) Save version and run all to run in background. 
-
-
-## Running evaluations
-
-In notebooks/evals.ipynb, you can run evaluation on the validation/testing set. The notebook requires you to have saved the model weights and tokenizer in artifacts. Example of how this might look:
-
-```
-notebooks/
-  artifacts/     
-    lstm_tokenizer.pkl    The tokenizer used for LSTM tokenization (also used for transformer implementation)
-    lstm.pt               The model weights for the ViT+LSTM  
-    transformer.pt        The model weights for the ViT+Transformer
-```
-
+# Code written entirely by our team
+Scripts/functions written by our team:
+    - src/models/vit_lora_lstm_attn.py  DINOv2 encoder with LoRA + LSTM decoder with Bahdanau attention, includes greedy and beam search decoding (255 lines)
+    - src/models/vit_transformer_v2.py  DINOv2 encoder with LoRA + Transformer decoder (67 lines)
+    - backend/app.py  Flask API for model inference from the web/mobile frontend (98 lines)
+    - get_data.py  Downloads the MathWriting dataset from HuggingFace and saves locally (12 lines)
+    - project.ipynb  Main evaluation notebook: loads dataset, loads models, runs evaluation on the test set (~120 lines of code across 14 cells)
+    - src/evals.ipynb  Evaluation notebook comparing LSTM, Transformer, and GPT-5.2 baselines on the validation set (~200 lines of code across 11 cells)
+    - src/evals_newdata.ipynb  Evaluation on CROHME external dataset (~130 lines of code across 7 cells)
+    - src/partition.ipynb  Annotation tool and evaluation by handwriting difficulty (easy/medium/hard partitions) (~180 lines of code across 8 cells)

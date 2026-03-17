@@ -107,25 +107,21 @@ class AttnDecoder(nn.Module):
 #============================================================================
 
 class ViTLatexModelLoRA(nn.Module):
-    def __init__(self, vocab_size, embed_dim=256, hidden_dim=512, lora_r=16, lora_alpha=32, lora_dropout=0.05):
+    def __init__(self, vocab_size, embed_dim=256, hidden_dim=512, lora_r=16, lora_alpha=32, lora_dropout=0.05, use_rslora=False):
         super().__init__()
         from transformers import AutoModel
         self.encoder = AutoModel.from_pretrained("facebook/dinov2-base")
 
-        # IMPORTANT: do NOT freeze everything after LoRA; LoRA will keep base frozen + adapters trainable.
-        # (Freezing before LoRA is fine, but not necessary.)
-
-        # Choose target modules after you inspect names.
-        # Start with common ViT block names:
         target_modules = ["query", "key", "value", "dense", "fc1", "fc2"]
-        
+
         lora_cfg = LoraConfig(
             r=lora_r,
             lora_alpha=lora_alpha,
             lora_dropout=lora_dropout,
             bias="none",
             target_modules=target_modules,
-            task_type="FEATURE_EXTRACTION",  # safe default for encoder-only usage
+            task_type="FEATURE_EXTRACTION",
+            use_rslora=use_rslora,
         )
         self.encoder = get_peft_model(self.encoder, lora_cfg)
 
