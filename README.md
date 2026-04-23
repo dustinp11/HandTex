@@ -26,7 +26,34 @@ PyTorch · HuggingFace Transformers · PEFT/LoRA · Flask · React Native
 ## Project Structure
 
 ```
-todo
+handtex/
+├── src/
+│   ├── models/
+│   │   ├── vit_lora_lstm_attn.py        # DINOv2 + LoRA + LSTM w/ Bahdanau attention (primary model)
+│   │   ├── vit_transformer_v2.py        # DINOv2 + LoRA + Transformer decoder
+│   │   ├── vit-transformer.py           # ViT + Transformer decoder
+│   │   └── vit-transformer-lora-r16.py  # ViT + Transformer decoder w/ LoRA r=16
+│   ├── vit.ipynb                        # ViT encoder experiments
+│   ├── vitencoder-dinov2-2.ipynb        # DINOv2 encoder training
+│   ├── cnn.ipynb                        # CNN baseline
+│   ├── evals.ipynb                      # Evaluation vs. GPT-5.2 baseline
+│   ├── evals_newdata.ipynb              # External eval on CROHME dataset
+│   └── partition.ipynb                  # Difficulty-partitioned eval (easy/medium/hard)
+├── backend/
+│   ├── app.py                           # Flask API — POST /predict, returns {"latex": ...}
+│   ├── models/
+│   │   └── vit_lora_lstm_attn.py        # Model copy for inference
+│   └── artifacts/
+│       └── vocab_size.txt
+├── mobile/
+│   ├── App.js                           # React Native app
+│   ├── app.json
+│   └── assets/
+├── output/
+│   └── gpt5_baseline_results.json
+├── get_data.py                          # Downloads MathWriting dataset from HuggingFace
+├── requirements.txt
+└── README.md
 ```
 
 ## Dataset
