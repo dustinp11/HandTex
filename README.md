@@ -23,32 +23,22 @@ HandTeX converts images of handwritten mathematical equations into LaTeX strings
 
 PyTorch · HuggingFace Transformers · PEFT/LoRA · Flask · React Native
 
-## My Role
-
-Team lead for 3-person team (UCI CS 175, Winter 2026). Led model architecture design, wrote the core LSTM + attention decoder, built the Flask inference API, and ran evaluation against GPT-5.2 and Claude 4.5 Sonnet baselines.
-
 ## Project Structure
 
 ```
-src/models/
-  vit_lora_lstm_attn.py     # DINOv2 + LoRA encoder, LSTM decoder w/ Bahdanau attention
-  vit_transformer_v2.py     # Transformer decoder variant
-backend/
-  app.py                    # Flask inference API
-src/
-  evals.ipynb               # Evaluation vs. LSTM/Transformer/GPT-5.2 baselines
-  evals_newdata.ipynb       # External eval on CROHME dataset
-  partition.ipynb           # Difficulty-partitioned eval (easy/medium/hard)
-project.ipynb               # Main evaluation notebook
-get_data.py                 # MathWriting dataset download script
+todo
 ```
 
 ## Dataset
 
 [MathWriting-human](https://huggingface.co/datasets/deepcopy/MathWriting-human) — ~230K handwritten math equations. External validation on CROHME dataset.
 
+## Course
+
+Built for UCI CS 175 (Winter 2026) as a 3-person team project.
+
 ## Attribution
 
 - **Pretrained weights**: [facebook/dinov2-base](https://huggingface.co/facebook/dinov2-base), used as frozen backbone with LoRA adapters
 - **Libraries**: PyTorch, torchvision, HuggingFace Transformers/Datasets/PEFT, Pillow, Flask, NumPy (TensorFlow/Keras used only for tokenizer utilities)
-- All model code, training pipeline, evaluation notebooks, and Flask API written by our team
+- All model code, training pipeline, evaluation notebooks, and Flask API written by the team
