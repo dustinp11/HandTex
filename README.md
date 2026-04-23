@@ -1,31 +1,54 @@
-# HandTeX — Handwriting to LaTeX
-# Course project for UCI CS 175 (Winter 2026)
-# Encoder-decoder models that convert handwritten math images to LaTeX strings.
-# Dataset: deepcopy/MathWriting-human on HuggingFace (~230k samples).
+# HandTeX
 
-# External libraries used
-Libraries used:
-    - PyTorch (https://pytorch.org/)
-    - torchvision (https://pytorch.org/vision/)
-    - HuggingFace Transformers (https://github.com/huggingface/transformers)
-    - HuggingFace Datasets (https://github.com/huggingface/datasets)
-    - HuggingFace PEFT / LoRA (https://github.com/huggingface/peft)
-    - Pillow (https://python-pillow.org/)
-    - Flask (https://flask.palletsprojects.com/)
-    - TensorFlow/Keras (https://www.tensorflow.org/) — used only for tokenizer utilities
-    - NumPy (https://numpy.org/)
+**Handwriting-to-LaTeX converter.** Snap a photo of a handwritten math equation and get clean LaTeX back in real time.
 
-# Publicly available code(s) used in this project
-Publicly available codes used:
-    - facebook/dinov2-base pretrained weights (https://huggingface.co/facebook/dinov2-base). Not modified, used as the frozen encoder backbone with LoRA adapters applied on top.
+## Demo
 
-# Code written entirely by our team
-Scripts/functions written by our team:
-    - src/models/vit_lora_lstm_attn.py  DINOv2 encoder with LoRA + LSTM decoder with Bahdanau attention, includes greedy and beam search decoding (255 lines)
-    - src/models/vit_transformer_v2.py  DINOv2 encoder with LoRA + Transformer decoder (67 lines)
-    - backend/app.py  Flask API for model inference from the web/mobile frontend (98 lines)
-    - get_data.py  Downloads the MathWriting dataset from HuggingFace and saves locally (12 lines)
-    - project.ipynb  Main evaluation notebook: loads dataset, loads models, runs evaluation on the test set (~120 lines of code across 14 cells)
-    - src/evals.ipynb  Evaluation notebook comparing LSTM, Transformer, and GPT-5.2 baselines on the validation set (~200 lines of code across 11 cells)
-    - src/evals_newdata.ipynb  Evaluation on CROHME external dataset (~130 lines of code across 7 cells)
-    - src/partition.ipynb  Annotation tool and evaluation by handwriting difficulty (easy/medium/hard partitions) (~180 lines of code across 8 cells)
+[![HandTeX Demo](https://img.youtube.com/vi/VNxEOfVlMCM/maxresdefault.jpg)](https://www.youtube.com/watch?v=VNxEOfVlMCM&list=PLPac3mAhH0PhFlXR-guO7qnDi3EEuRpSs&index=2)
+
+*Click the thumbnail to watch the demo on YouTube.*
+
+## What it does
+
+HandTeX converts images of handwritten mathematical equations into LaTeX strings using a vision encoder-decoder architecture. Trained on 230K samples from the MathWriting dataset, it achieves **50% exact match accuracy** on the held-out test set with real-time inference.
+
+## Architecture
+
+- **Encoder**: Frozen DINOv2-base with LoRA adapters for efficient fine-tuning
+- **Decoder**: Custom LSTM with Bahdanau attention (primary) + Transformer decoder variant
+- **Training**: Teacher-forced with CrossEntropyLoss, character-level tokenization
+- **Inference**: Greedy autoregressive decoding (beam search also implemented)
+
+## Tech Stack
+
+PyTorch · HuggingFace Transformers · PEFT/LoRA · Flask · React Native
+
+## My Role
+
+Team lead for 3-person team (UCI CS 175, Winter 2026). Led model architecture design, wrote the core LSTM + attention decoder, built the Flask inference API, and ran evaluation against GPT-5.2 and Claude 4.5 Sonnet baselines.
+
+## Project Structure
+
+```
+src/models/
+  vit_lora_lstm_attn.py     # DINOv2 + LoRA encoder, LSTM decoder w/ Bahdanau attention
+  vit_transformer_v2.py     # Transformer decoder variant
+backend/
+  app.py                    # Flask inference API
+src/
+  evals.ipynb               # Evaluation vs. LSTM/Transformer/GPT-5.2 baselines
+  evals_newdata.ipynb       # External eval on CROHME dataset
+  partition.ipynb           # Difficulty-partitioned eval (easy/medium/hard)
+project.ipynb               # Main evaluation notebook
+get_data.py                 # MathWriting dataset download script
+```
+
+## Dataset
+
+[MathWriting-human](https://huggingface.co/datasets/deepcopy/MathWriting-human) — ~230K handwritten math equations. External validation on CROHME dataset.
+
+## Attribution
+
+- **Pretrained weights**: [facebook/dinov2-base](https://huggingface.co/facebook/dinov2-base), used as frozen backbone with LoRA adapters
+- **Libraries**: PyTorch, torchvision, HuggingFace Transformers/Datasets/PEFT, Pillow, Flask, NumPy (TensorFlow/Keras used only for tokenizer utilities)
+- All model code, training pipeline, evaluation notebooks, and Flask API written by our team
